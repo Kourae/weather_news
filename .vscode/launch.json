@@ -8,7 +8,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "Launch Chrome against localhost",
-            "url": "http://localhost/weather_news/",
+            "url": "http://localhost/weather_news/startup.php",
             "webRoot": "${workspaceFolder}"
         }
     ]

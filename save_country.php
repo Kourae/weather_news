@@ -1,52 +1,59 @@
 <?php
 header('Content-Type: application/json');
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
 $host = 'localhost';
-$user = 'root'; // change this if needed
-$pass = '';     // change this if needed
+$user = 'root';        // Update if different
+$pass = '';            // Update if different
 $dbname = 'weathernews_db';
 
-// Connect to MySQL server (no DB selected yet)
-$conn = new mysqli($host, $user, $pass);
+$conn = new mysqli($host, $user, $pass, $dbname);
 if ($conn->connect_error) {
-    die(json_encode(['error' => 'Database connection failed']));
-}
-
-// Create database if it doesn't exist
-$conn->query("CREATE DATABASE IF NOT EXISTS $dbname CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
-
-// Select the database
-$conn->select_db($dbname);
-
-// Create table if not exists
-$conn->query("
-    CREATE TABLE IF NOT EXISTS saved_countries (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(100) NOT NULL,
-        capital VARCHAR(100),
-        latlng VARCHAR(100),
-        saved_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )
-");
-
-// Read JSON input
-$data = json_decode(file_get_contents('php://input'), true);
-
-if (!isset($data['name']) || !isset($data['capital']) || !isset($data['latlng'])) {
-    echo json_encode(['error' => 'Invalid input']);
+    echo json_encode(['message' => 'Database connection failed']);
     exit;
 }
 
-$name = $conn->real_escape_string($data['name']);
-$capital = $conn->real_escape_string($data['capital']);
-$latlng = $conn->real_escape_string($data['latlng']);
+// Get JSON input
+$data = json_decode(file_get_contents('php://input'), true);
 
-$sql = "INSERT INTO saved_countries (name, capital, latlng) VALUES ('$name', '$capital', '$latlng')";
-
-if ($conn->query($sql) === TRUE) {
-    echo json_encode(['message' => 'Country saved successfully']);
-} else {
-    echo json_encode(['error' => 'Failed to save country']);
+if (
+    !$data ||
+    empty($data['name']) ||
+    empty($data['capital'])
+) {
+    echo json_encode(['message' => 'Invalid data']);
+    $conn->close();
+    exit;
 }
 
+$name = $data['name'];
+$capital = $data['capital'];
+$latlng = isset($data['latlng']) ? $data['latlng'] : '';
+
+// Check if country already saved using prepared statement
+$stmt_check = $conn->prepare("SELECT id FROM saved_countries WHERE name = ?");
+$stmt_check->bind_param('s', $name);
+$stmt_check->execute();
+$stmt_check->store_result();
+
+if ($stmt_check->num_rows > 0) {
+    echo json_encode(['message' => 'Country already saved']);
+    $stmt_check->close();
+    $conn->close();
+    exit;
+}
+$stmt_check->close();
+
+// Insert new country using prepared statement
+$stmt_insert = $conn->prepare("INSERT INTO saved_countries (name, capital, latlng) VALUES (?, ?, ?)");
+$stmt_insert->bind_param('sss', $name, $capital, $latlng);
+
+if ($stmt_insert->execute()) {
+    echo json_encode(['message' => 'Country saved successfully!']);
+} else {
+    echo json_encode(['message' => 'Failed to save country']);
+}
+
+$stmt_insert->close();
 $conn->close();

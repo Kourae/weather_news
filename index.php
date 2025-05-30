@@ -4,153 +4,236 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Country & Weather</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     body {
-      font-family: 'Roboto', sans-serif;
-      background: #e3f2fd;
+      font-family: 'Open Sans', sans-serif; /* for body text */
+      background: #F5F5F5;
       margin: 0; padding: 0;
+      color: #2E2E2E;
     }
     header {
-      background: #90caf9;
+      font-family: 'Montserrat', sans-serif; /* headings */
+      background: #2E2E2E;
       padding: 20px;
       text-align: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      box-shadow: 0 3px 12px rgba(0,0,0,0.2);
       position: relative;
+      color: #FFFFFF;
+      font-weight: 600;
     }
     header h1 {
       margin: 0;
-      color: #0d47a1;
+      font-weight: 700;
+      font-size: 2.4rem;
+      letter-spacing: 2px;
     }
+
+    /* Back button on the left */
+    #backBtn {
+      font-family: 'Montserrat', sans-serif;
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: #4B4B4B;
+      border: none;
+      color: #FFFFFF;
+      padding: 10px 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 1rem;
+      transition: background 0.3s ease;
+      box-shadow: 0 3px 8px rgba(75, 75, 75, 0.6);
+      letter-spacing: 0.8px;
+    }
+    #backBtn:hover {
+      background: #666666;
+      box-shadow: 0 5px 12px rgba(102, 102, 102, 0.8);
+    }
+
+    /* View Saved Countries button on the right */
     #viewSavedBtn {
+      font-family: 'Montserrat', sans-serif;
       position: absolute;
       top: 20px;
       right: 20px;
-      background: #42a5f5;
+      background: #4B4B4B;
       border: none;
-      color: white;
-      padding: 10px 15px;
-      border-radius: 8px;
+      color: #FFFFFF;
+      padding: 10px 16px;
+      border-radius: 12px;
       cursor: pointer;
-      font-weight: 500;
+      font-weight: 700;
+      font-size: 1rem;
       transition: background 0.3s ease;
+      box-shadow: 0 3px 8px rgba(75, 75, 75, 0.6);
+      letter-spacing: 0.8px;
     }
     #viewSavedBtn:hover {
-      background: #1e88e5;
+      background: #666666;
+      box-shadow: 0 5px 12px rgba(102, 102, 102, 0.8);
     }
+
     #searchContainer {
-      margin: 20px auto;
+      margin: 30px auto;
       text-align: center;
     }
     #search {
-      padding: 10px;
+      font-family: 'Open Sans', sans-serif;
+      padding: 14px;
       width: 80%;
-      max-width: 400px;
-      border: 2px solid #90caf9;
-      border-radius: 10px;
-      font-size: 16px;
+      max-width: 420px;
+      border: 2px solid #A0A0A0;
+      border-radius: 14px;
+      font-size: 18px;
+      transition: border-color 0.3s ease;
+      outline-offset: 3px;
+      background: #FFFFFF;
+      color: #2E2E2E;
+      font-weight: 600;
+    }
+    #search::placeholder {
+      color: #A0A0A0;
+      font-weight: 400;
+    }
+    #search:focus {
+      border-color: #4B4B4B;
+      outline: none;
+      box-shadow: 0 0 10px #4B4B4Baa;
+      background: #FFFFFF;
     }
     #searchBtn {
-      padding: 10px 20px;
-      margin-left: 10px;
-      background: #64b5f6;
+      font-family: 'Montserrat', sans-serif;
+      padding: 14px 28px;
+      margin-left: 14px;
+      background: #4B4B4B;
       border: none;
-      color: white;
-      border-radius: 8px;
+      color: #FFFFFF;
+      border-radius: 14px;
       cursor: pointer;
-      font-weight: 500;
-      transition: background 0.3s ease;
+      font-weight: 700;
+      font-size: 1.1rem;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 4px 12px rgba(75, 75, 75, 0.6);
+      letter-spacing: 0.7px;
     }
     #searchBtn:hover {
-      background: #42a5f5;
+      background: #666666;
+      box-shadow: 0 6px 16px rgba(102, 102, 102, 0.8);
     }
     #results {
       display: flex;
       justify-content: center;
-      padding: 20px;
+      padding: 28px 15px;
+      flex-wrap: wrap;
+      gap: 24px;
     }
     .country-card {
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      padding: 15px;
-      width: 250px;
+      font-family: 'Open Sans', sans-serif;
+      background: #FFFFFF;
+      border-radius: 20px;
+      box-shadow: 0 8px 24px rgba(46, 46, 46, 0.1);
+      padding: 22px;
+      width: 270px;
       text-align: center;
-      transition: transform 0.2s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      color: #2E2E2E;
+      font-weight: 600;
     }
     .country-card:hover {
-      transform: scale(1.05);
+      transform: translateY(-8px);
+      box-shadow: 0 18px 40px rgba(46, 46, 46, 0.2);
     }
     .country-card h3 {
-      color: #1976d2;
-      margin-bottom: 10px;
+      font-family: 'Montserrat', sans-serif;
+      color: #2E2E2E;
+      margin-bottom: 14px;
+      font-weight: 700;
+      font-size: 22px;
+      letter-spacing: 0.7px;
     }
     .country-card button.saveBtn {
-      margin-top: 10px;
-      padding: 8px 12px;
-      background-color: #64b5f6;
+      font-family: 'Montserrat', sans-serif;
+      margin-top: 18px;
+      padding: 12px 24px;
+      background-color: #4B4B4B;
       border: none;
-      color: white;
-      border-radius: 8px;
+      color: #FFFFFF;
+      border-radius: 16px;
       cursor: pointer;
-      transition: background 0.3s ease;
-      font-weight: 500;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+      font-weight: 700;
+      font-size: 16px;
+      box-shadow: 0 5px 15px rgba(75, 75, 75, 0.6);
+      letter-spacing: 0.6px;
     }
     .country-card button.saveBtn:hover {
-      background-color: #42a5f5;
+      background-color: #666666;
+      box-shadow: 0 7px 20px rgba(102, 102, 102, 0.8);
     }
-
     /* Modal styles */
     #savedModal {
+      font-family: 'Open Sans', sans-serif;
       display: none;
       position: fixed;
       z-index: 1000;
       left: 0; top: 0;
       width: 100%; height: 100%;
       overflow: auto;
-      background-color: rgba(0,0,0,0.4);
-      font-family: 'Roboto', sans-serif;
+      background-color: rgba(46, 46, 46, 0.85);
+      color: #FFFFFF;
     }
     #savedModalContent {
-      background-color: #fefefe;
+      background-color: #FFFFFF;
       margin: 10% auto;
-      padding: 20px;
-      border-radius: 15px;
+      padding: 28px 36px;
+      border-radius: 24px;
       width: 90%;
-      max-width: 500px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      max-width: 540px;
+      box-shadow: 0 12px 40px rgba(46, 46, 46, 0.35);
       position: relative;
+      color: #2E2E2E;
+      font-weight: 600;
     }
     #closeSavedModal {
-      color: #aaa;
+      font-family: 'Montserrat', sans-serif;
+      color: #4B4B4B;
       position: absolute;
-      top: 15px;
-      right: 20px;
-      font-size: 28px;
-      font-weight: bold;
+      top: 20px;
+      right: 28px;
+      font-size: 34px;
+      font-weight: 700;
       cursor: pointer;
       transition: color 0.3s ease;
+      letter-spacing: 0.8px;
     }
     #closeSavedModal:hover {
-      color: #000;
+      color: #2E2E2E;
     }
     .saved-item {
-      border-bottom: 1px solid #ddd;
-      padding: 10px 0;
+      border-bottom: 1px solid #A0A0A0;
+      padding: 16px 0;
     }
     .saved-item:last-child {
       border-bottom: none;
     }
     .saved-item h4 {
-      margin: 0 0 5px 0;
-      color: #1976d2;
+      font-family: 'Montserrat', sans-serif;
+      margin: 0 0 10px 0;
+      color: #2E2E2E;
+      font-weight: 700;
+      letter-spacing: 0.6px;
     }
   </style>
 </head>
+
 <body>
   <header>
+    <button id="backBtn" onclick="window.location.href='startup.php'">Back</button>
     <h1>Weather Checker</h1>
-    <button id="viewSavedBtn" title="View Saved Countries">View Saved</button>
+    <button id="viewSavedBtn" onclick="window.location.href='view_saved_countries.php'">View Saved Countries</button>
+
     <p>Discover countries and their current weather!</p>
   </header>
 
@@ -161,12 +244,15 @@
 
   <div id="results"></div>
 
-  <!-- Saved countries modal -->
-  <div id="savedModal">
-    <div id="savedModalContent">
-      <span id="closeSavedModal">&times;</span>
-      <h2>Saved Countries</h2>
-      <div id="savedList">Loading...</div>
+  <!-- Save Confirmation Modal -->
+  <div id="saveConfirmModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; z-index: 2000;">
+    <div style="background: white; padding: 24px 32px; border-radius: 16px; text-align: center; max-width: 320px;">
+      <p style="font-weight: 600; font-size: 18px; color: #2E2E2E;">Do you want to save this country?</p>
+      <div style="margin-top: 20px;">
+        <button id="saveYes" style="margin-right: 10px; background-color: #4B4B4B; color: white; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold;">Yes</button>
+        <button id="saveNo" style="background-color: #AAAAAA; color: white; padding: 10px 20px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold;">No</button>
+      </div>
     </div>
   </div>
 

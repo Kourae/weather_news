@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // Elements for search & save
   const searchInput = document.getElementById('search');
   const searchBtn = document.getElementById('searchBtn');
   const resultsDiv = document.getElementById('results');
@@ -7,6 +8,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeSavedModal = document.getElementById('closeSavedModal');
   const savedList = document.getElementById('savedList');
 
+  // Elements for delete confirmation modal
+  const container = document.getElementById('countryContainer');
+  const modal = document.getElementById('deleteConfirmModal');
+  const btnYes = document.getElementById('confirmYes');
+  const btnNo = document.getElementById('confirmNo');
+
+  let countryToDelete = null;
+
+  // Search countries
   async function searchCountries() {
     const query = searchInput.value.trim();
     if (!query) return alert('Please enter a country name.');
@@ -61,6 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Save country
   async function saveCountry(countryData) {
     try {
       const res = await fetch('save_country.php', {
@@ -75,6 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // View saved countries modal
   async function viewSavedCountries() {
     savedList.innerHTML = '<p>Loading saved countries...</p>';
     savedModal.style.display = 'block';
@@ -104,6 +116,48 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Delete confirmation modal handlers
+  if (container && modal && btnYes && btnNo) {
+    container.addEventListener('click', (e) => {
+      if (e.target.classList.contains('deleteBtn')) {
+        countryToDelete = e.target.closest('.country-card');
+        modal.style.display = 'flex';
+      }
+    });
+
+    btnYes.addEventListener('click', async () => {
+      if (!countryToDelete) return;
+
+      const id = countryToDelete.getAttribute('data-id');
+
+      try {
+        const res = await fetch('delete_country.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: Number(id) })
+        });
+
+        const result = await res.json();
+        alert(result.message);
+
+        if (result.success) {
+          countryToDelete.remove();
+        }
+      } catch (err) {
+        alert('Error deleting country.');
+      }
+
+      modal.style.display = 'none';
+      countryToDelete = null;
+    });
+
+    btnNo.addEventListener('click', () => {
+      modal.style.display = 'none';
+      countryToDelete = null;
+    });
+  }
+
+  // Event listeners for search and saved modal
   searchBtn.addEventListener('click', searchCountries);
   searchInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') searchCountries();
@@ -120,4 +174,8 @@ document.addEventListener('DOMContentLoaded', () => {
       savedModal.style.display = 'none';
     }
   });
+
+
+
+
 });
