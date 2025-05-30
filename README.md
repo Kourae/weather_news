@@ -3,7 +3,7 @@
 Final Project - Integrative Programming
 
 Member:
-Kervy Cadiente
+Kervy Cadiente and
 Rae Tuazon
 
 Project Name: Country info with weather dashboard
