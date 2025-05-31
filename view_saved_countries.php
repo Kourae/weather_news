@@ -4,11 +4,28 @@ $user = 'root';
 $pass = '';
 $dbname = 'weathernews_db';
 
-$conn = new mysqli($host, $user, $pass, $dbname);
+// Connect to MySQL server (without selecting DB yet)
+$conn = new mysqli($host, $user, $pass);
 if ($conn->connect_error) {
   die("Connection failed: " . $conn->connect_error);
 }
 
+// Create the database if it doesn't exist
+$conn->query("CREATE DATABASE IF NOT EXISTS $dbname");
+
+// Select the database
+$conn->select_db($dbname);
+
+// Create the table if it doesn't exist
+$createTableSQL = "CREATE TABLE IF NOT EXISTS saved_countries (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  capital VARCHAR(100),
+  latlng VARCHAR(100)
+)";
+$conn->query($createTableSQL);
+
+// Now fetch the data
 $sql = "SELECT id, name, capital, latlng FROM saved_countries ORDER BY name ASC";
 $result = $conn->query($sql);
 ?>
