@@ -8,7 +8,6 @@ Rae Tuazon
 
 Project Name: Country info with weather 
 
-File Structure: 
 
 Steps on how to run our project:
 1. Use Visual Code Studio.
